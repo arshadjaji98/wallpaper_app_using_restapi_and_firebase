@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "41343714451",
+    "project_id": "wallpaper-app-fecb0",
+    "storage_bucket": "wallpaper-app-fecb0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:41343714451:android:f72a399483b987c7f0b966",
+        "android_client_info": {
+          "package_name": "com.example.wallpaperapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBVxcCrlSkpoXk-fjPUhPwx4Mua2y-Tsxc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
