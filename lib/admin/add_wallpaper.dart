@@ -2,6 +2,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:wallpaper_application_firebase/pages/bottom_nav_bar.dart';
 import 'package:wallpaper_application_firebase/services/database.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:random_string/random_string.dart';
@@ -38,7 +39,6 @@ class _AddWallpaperState extends State<AddWallpaper> {
 
       try {
         var downloadUrl = await (await task).ref.getDownloadURL();
-        print('Upload completed, download URL: $downloadUrl');
 
         Map<String, dynamic> addItem = {
           "Image": downloadUrl,
@@ -48,7 +48,6 @@ class _AddWallpaperState extends State<AddWallpaper> {
         await DatabaseMethods()
             .addWallpaper(addItem, addId, value!)
             .then((value) {
-          print('Wallpaper added to the database.');
           Fluttertoast.showToast(
               msg: "Wallpaper has been added successfully",
               toastLength: Toast.LENGTH_LONG,
@@ -194,6 +193,22 @@ class _AddWallpaperState extends State<AddWallpaper> {
                       fontFamily: 'Poppins'),
                 ),
               ),
+            ),
+          ),
+          SizedBox(height: 10),
+          MaterialButton(
+            color: Colors.red,
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => BottomNavBar()));
+            },
+            child: Text(
+              "HomeScreen",
+              style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                  fontFamily: 'Poppins'),
             ),
           )
         ],

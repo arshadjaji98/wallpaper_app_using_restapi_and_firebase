@@ -16,7 +16,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
 
   late List<Widget> pages;
   late HomeScreen home;
-  late Catogries catogries;
+  late Categories catogries;
   late Search search;
   late Widget currentPage;
 
@@ -24,7 +24,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
   void initState() {
     home = HomeScreen();
     search = Search();
-    catogries = Catogries();
+    catogries = Categories();
     currentPage = HomeScreen();
     pages = [home, search, catogries];
     super.initState();

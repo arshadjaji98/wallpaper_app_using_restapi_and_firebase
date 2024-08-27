@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:wallpaper_application_firebase/pages/all_walllpaper.dart';
 
-class Catogries extends StatefulWidget {
-  const Catogries({super.key});
+class Categories extends StatefulWidget {
+  const Categories({super.key});
 
   @override
-  State<Catogries> createState() => _CatogriesState();
+  State<Categories> createState() => _CategoriesState();
 }
 
-class _CatogriesState extends State<Catogries> {
+class _CategoriesState extends State<Categories> {
+  final double containerHeight = 200;
+  final double borderRadius = 20;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
-          margin: const EdgeInsets.only(top: 20),
+          margin: const EdgeInsets.only(top: 20, bottom: 20),
           child: Column(
             children: [
               const Center(
@@ -23,146 +27,101 @@ class _CatogriesState extends State<Catogries> {
                         fontWeight: FontWeight.bold,
                         fontFamily: 'Poppins')),
               ),
-              Container(
-                margin: const EdgeInsets.only(left: 20, right: 20),
-                width: MediaQuery.of(context).size.width,
-                child: Stack(
-                  children: [
-                    Image.asset(
-                      "assets/animals.jpg",
-                      width: MediaQuery.of(context).size.width,
-                      height: 300,
-                    ),
-                    Positioned(
-                      top: 46,
-                      left: 0,
-                      right: 0,
-                      child: Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: 210,
-                        color: Colors.black26,
-                        child: const Center(
-                          child: Text(
-                            "WildLife",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 30,
-                                fontFamily: 'Poppins',
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+              const SizedBox(height: 20),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              AllWalllpaper(category: 'Wildlife ')));
+                },
+                child: _buildCategoryContainer(
+                    context, "assets/animals.jpg", "WildLife", 0, 210),
               ),
-              Container(
-                margin: const EdgeInsets.only(left: 20, right: 20),
-                width: MediaQuery.of(context).size.width,
-                child: Stack(
-                  children: [
-                    Image.asset(
-                      "assets/foods.jpg",
-                      width: MediaQuery.of(context).size.width,
-                      height: 300,
-                    ),
-                    Positioned(
-                      top: 33,
-                      left: 0,
-                      right: 0,
-                      child: Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: 235,
-                        color: Colors.black26,
-                        child: const Center(
-                          child: Text(
-                            "Foods",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 30,
-                                fontFamily: 'Poppins',
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+              const SizedBox(height: 20),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              AllWalllpaper(category: 'Foods')));
+                },
+                child: _buildCategoryContainer(
+                    context, "assets/foods.jpg", "Foods", 0, 210),
               ),
-              Container(
-                margin: const EdgeInsets.only(left: 20, right: 20),
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                child: Stack(
-                  children: [
-                    Image.asset(
-                      "assets/nature.jpg",
-                      width: MediaQuery.of(context).size.width,
-                      height: 300,
-                    ),
-                    Positioned(
-                      top: 12,
-                      left: 0,
-                      right: 0,
-                      child: Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: 270,
-                        color: Colors.black26,
-                        child: const Center(
-                          child: Text(
-                            "Nature",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 30,
-                                fontFamily: 'Poppins',
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+              const SizedBox(height: 20),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              AllWalllpaper(category: 'Nature')));
+                },
+                child: _buildCategoryContainer(
+                    context, "assets/nature.jpg", "Nature", 0, 210),
               ),
-              Container(
-                margin: const EdgeInsets.only(left: 20, right: 20),
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                child: Stack(
-                  children: [
-                    Image.asset(
-                      "assets/city.jpg",
-                      width: MediaQuery.of(context).size.width,
-                      height: 300,
-                    ),
-                    Positioned(
-                      top: 36,
-                      left: 0,
-                      right: 0,
-                      child: Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: 228,
-                        color: Colors.black26,
-                        child: const Center(
-                          child: Text(
-                            "Places",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 30,
-                                fontFamily: 'Poppins',
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+              const SizedBox(height: 20),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              AllWalllpaper(category: 'Places')));
+                },
+                child: _buildCategoryContainer(
+                    context, "assets/city.jpg", "Places", 0, 210),
               )
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCategoryContainer(BuildContext context, String imagePath,
+      String label, double topPosition, double textBackgroundHeight) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20),
+      width: MediaQuery.of(context).size.width,
+      height: containerHeight,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(borderRadius),
+        boxShadow: const [
+          BoxShadow(color: Colors.black26, blurRadius: 8, offset: Offset(2, 2)),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(borderRadius),
+        child: Stack(
+          children: [
+            Image.asset(imagePath,
+                width: MediaQuery.of(context).size.width,
+                height: containerHeight,
+                fit: BoxFit.cover),
+            Positioned(
+                top: topPosition,
+                left: 0,
+                right: 0,
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: textBackgroundHeight,
+                  color: Colors.black26,
+                  child: Center(
+                    child: Text(
+                      label,
+                      style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 30,
+                          fontFamily: 'Poppins',
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                )),
+          ],
         ),
       ),
     );
