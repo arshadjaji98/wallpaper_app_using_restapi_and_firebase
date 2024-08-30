@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:wallpaper_application_firebase/admin/admin_login.dart';
+import 'package:wallpaper_application_firebase/pages/bottom_nav_bar.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const AdminLogIn(),
+      home: const BottomNavBar(),
     );
   }
 }
