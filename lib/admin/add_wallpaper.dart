@@ -1,5 +1,6 @@
 // ignore_for_file: depend_on_referenced_packages
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:wallpaper_application_firebase/pages/bottom_nav_bar.dart';
@@ -31,7 +32,9 @@ class _AddWallpaperState extends State<AddWallpaper> {
 
   uploadItem() async {
     if (selectedImage != null) {
-      print('Image selected, starting upload...');
+      if (kDebugMode) {
+        print('Image selected, starting upload...');
+      }
       String addId = randomAlphaNumeric(10);
       Reference firebaseStorageRef =
           FirebaseStorage.instance.ref().child("blogImages").child(addId);
@@ -39,12 +42,7 @@ class _AddWallpaperState extends State<AddWallpaper> {
 
       try {
         var downloadUrl = await (await task).ref.getDownloadURL();
-
-        Map<String, dynamic> addItem = {
-          "Image": downloadUrl,
-          "Id": addId,
-        };
-
+        Map<String, dynamic> addItem = {"Image": downloadUrl, "Id": addId};
         await DatabaseMethods()
             .addWallpaper(addItem, addId, value!)
             .then((value) {
@@ -58,7 +56,9 @@ class _AddWallpaperState extends State<AddWallpaper> {
               fontSize: 20);
         });
       } catch (e) {
-        print('Error during upload or database addition: $e');
+        if (kDebugMode) {
+          print('Error during upload or database addition: $e');
+        }
         Fluttertoast.showToast(
             msg: "Failed to upload image or add to database.",
             toastLength: Toast.LENGTH_LONG,
@@ -68,7 +68,9 @@ class _AddWallpaperState extends State<AddWallpaper> {
             fontSize: 20);
       }
     } else {
-      print('No image selected.');
+      if (kDebugMode) {
+        print('No image selected.');
+      }
       Fluttertoast.showToast(
           msg: "No image selected.",
           toastLength: Toast.LENGTH_LONG,
@@ -195,14 +197,16 @@ class _AddWallpaperState extends State<AddWallpaper> {
               ),
             ),
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           MaterialButton(
             color: Colors.red,
             onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => BottomNavBar()));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const BottomNavBar()));
             },
-            child: Text(
+            child: const Text(
               "HomeScreen",
               style: TextStyle(
                   color: Colors.white,

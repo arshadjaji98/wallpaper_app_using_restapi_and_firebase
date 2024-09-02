@@ -1,4 +1,6 @@
+// ignore: depend_on_referenced_packages
 import "package:cloud_firestore/cloud_firestore.dart";
+import "package:flutter/foundation.dart";
 
 class DatabaseMethods {
   Future addWallpaper(
@@ -8,14 +10,18 @@ class DatabaseMethods {
           .collection(category)
           .doc(id)
           .set(wallpaperInfoMap);
-      print('Wallpaper added successfully to $category');
+      if (kDebugMode) {
+        print('Wallpaper added successfully to $category');
+      }
     } catch (e) {
-      print('Error adding wallpaper: $e');
-      throw e;
+      if (kDebugMode) {
+        print('Error adding wallpaper: $e');
+      }
+      rethrow;
     }
   }
 
   Future<Stream<QuerySnapshot>> getCategory(String name) async {
-    return await FirebaseFirestore.instance.collection(name).snapshots();
+    return FirebaseFirestore.instance.collection(name).snapshots();
   }
 }

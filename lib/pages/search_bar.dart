@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:wallpaper_application_firebase/model/photos_model.dart';
 import 'package:http/http.dart' as http;
@@ -34,7 +35,9 @@ class _SearchState extends State<Search> {
         photos = fetchedPhotos;
       });
     } else {
-      print('Failed to load wallpapers: ${response.statusCode}');
+      if (kDebugMode) {
+        print('Failed to load wallpapers: ${response.statusCode}');
+      }
     }
   }
 

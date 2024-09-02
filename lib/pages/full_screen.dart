@@ -1,13 +1,16 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+// ignore: depend_on_referenced_packages
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 // ignore: must_be_immutable
 class FullScreen extends StatefulWidget {
   String imagepath;
 
-  FullScreen({required this.imagepath});
+  FullScreen({super.key, required this.imagepath});
 
   @override
   State<FullScreen> createState() => _FullScreenState();
@@ -64,7 +67,7 @@ class _FullScreenState extends State<FullScreen> {
                                 style: TextStyle(
                                     fontSize: 10,
                                     color: Colors.white,
-                                    fontFamily: 'Poppins')),
+                                    fontFamily: 'Poppins'))
                           ],
                         ),
                       ),
@@ -88,11 +91,37 @@ class _FullScreenState extends State<FullScreen> {
     );
   }
 
-  void _save() async {
-    var response = await Dio().get(widget.imagepath,
-        options: Options(responseType: ResponseType.bytes));
-    final result = await ImageGallerySaver.saveImage(response.data);
-    print(result);
-    Navigator.pop(context);
+  Future<void> _save() async {
+    if (await _requestPermission(Permission.storage)) {
+      try {
+        var response = await Dio().get(widget.imagepath,
+            options: Options(responseType: ResponseType.bytes));
+        final result = await ImageGallerySaver.saveImage(
+            Uint8List.fromList(response.data));
+
+        if (result['isSuccess']) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content:
+                  Text('Image saved successfully: ${result['filePath']}')));
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content:
+                  Text("Failed to save image: ${result['errorMessage']}")));
+        }
+
+        Navigator.pop(context);
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Image was not saved successfully: $e")));
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Permission to access storage was denied")));
+    }
+  }
+
+  Future<bool> _requestPermission(Permission permission) async {
+    final status = await permission.request();
+    return status.isGranted;
   }
 }

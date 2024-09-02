@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:wallpaper_application_firebase/pages/catogries.dart';
 import 'package:wallpaper_application_firebase/pages/home_screen.dart';
 import 'package:wallpaper_application_firebase/pages/search_bar.dart';
+// ignore: depend_on_referenced_packages
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 
 class BottomNavBar extends StatefulWidget {
@@ -22,10 +23,10 @@ class _BottomNavBarState extends State<BottomNavBar> {
 
   @override
   void initState() {
-    home = HomeScreen();
-    search = Search();
-    catogries = Categories();
-    currentPage = HomeScreen();
+    home = const HomeScreen();
+    search = const Search();
+    catogries = const Categories();
+    currentPage = const HomeScreen();
     pages = [home, search, catogries];
     super.initState();
   }
@@ -37,8 +38,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
         buttonBackgroundColor: Colors.black,
         backgroundColor: Colors.white,
         height: 65,
-        color: Color.fromARGB(255, 84, 87, 93),
-        animationDuration: Duration(microseconds: 500),
+        color: const Color.fromARGB(255, 84, 87, 93),
+        animationDuration: const Duration(microseconds: 500),
         onTap: (int index) {
           setState(
             () {
@@ -46,7 +47,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
             },
           );
         },
-        items: [
+        items: const [
           Icon(Icons.home, color: Colors.white),
           Icon(Icons.search_outlined, color: Colors.white),
           Icon(Icons.category, color: Colors.white),

@@ -22,44 +22,43 @@ class _AllWalllpaperState extends State<AllWalllpaper> {
 
   Widget allWallpaper() {
     return StreamBuilder(
-      stream: categoryStream,
-      builder: (context, AsyncSnapshot snapshot) {
-        return snapshot.hasData
-            ? GridView.builder(
-                padding: EdgeInsets.zero,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    childAspectRatio: 0.6,
-                    mainAxisSpacing: 10,
-                    crossAxisSpacing: 10),
-                itemCount: snapshot.data.docs.length,
-                itemBuilder: (context, index) {
-                  DocumentSnapshot ds = snapshot.data.docs[index];
-                  return ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Image.network(
-                      ds["Image"],
-                      fit: BoxFit.cover,
-                      loadingBuilder: (context, child, progress) {
-                        if (progress == null) return child;
-                        return Center(
-                          child: CircularProgressIndicator(
-                            value: progress.expectedTotalBytes != null
-                                ? progress.cumulativeBytesLoaded /
-                                    (progress.expectedTotalBytes ?? 1)
-                                : null,
-                          ),
-                        );
-                      },
-                      errorBuilder: (context, error, stackTrace) =>
-                          const Center(child: Icon(Icons.error)),
-                    ),
-                  );
-                },
-              )
-            : const Center(child: CircularProgressIndicator());
-      },
-    );
+        stream: categoryStream,
+        builder: (context, AsyncSnapshot snapshot) {
+          return snapshot.hasData
+              ? GridView.builder(
+                  padding: EdgeInsets.zero,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      childAspectRatio: 0.6,
+                      mainAxisSpacing: 10,
+                      crossAxisSpacing: 10),
+                  itemCount: snapshot.data.docs.length,
+                  itemBuilder: (context, index) {
+                    DocumentSnapshot ds = snapshot.data.docs[index];
+                    return ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Image.network(
+                        ds["Image"],
+                        fit: BoxFit.cover,
+                        loadingBuilder: (context, child, progress) {
+                          if (progress == null) return child;
+                          return Center(
+                            child: CircularProgressIndicator(
+                              value: progress.expectedTotalBytes != null
+                                  ? progress.cumulativeBytesLoaded /
+                                      (progress.expectedTotalBytes ?? 1)
+                                  : null,
+                            ),
+                          );
+                        },
+                        errorBuilder: (context, error, stackTrace) =>
+                            const Center(child: Icon(Icons.error)),
+                      ),
+                    );
+                  },
+                )
+              : const Center(child: CircularProgressIndicator());
+        });
   }
 
   @override
