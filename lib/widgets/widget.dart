@@ -5,7 +5,7 @@ import 'package:wallify/pages/full_screen.dart';
 
 Widget wallpaper(List<PhotosModel> listPhotos, BuildContext context) {
   return Container(
-    padding: const EdgeInsets.symmetric(horizontal: 16),
+    padding: EdgeInsets.symmetric(horizontal: 10),
     child: GridView.count(
       padding: const EdgeInsets.all(4),
       crossAxisCount: 2,
@@ -27,6 +27,9 @@ Widget wallpaper(List<PhotosModel> listPhotos, BuildContext context) {
             child: Hero(
               tag: photosModel.src!.portrait!,
               child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                ),
                 child: CachedNetworkImage(
                   imageUrl: photosModel.src!.portrait!,
                   placeholder: (context, url) =>

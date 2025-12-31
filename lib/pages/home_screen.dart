@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'dart:math';
 
 import 'package:wallify/pages/full_screen.dart';
 
@@ -45,16 +44,16 @@ class _HomeScreenState extends State<HomeScreen> {
           .map<String>((photo) => photo['src']['portrait'] as String)
           .toList();
 
-      images.shuffle(); // optional randomness
+      images.shuffle();
 
       setState(() {
         if (loadMore) {
-          wallpaperImages.addAll(images); // append new images
+          wallpaperImages.addAll(images);
           isLoadingMore = false;
         } else {
           wallpaperImages = images;
         }
-        page++; // next page
+        page++;
       });
     } else {
       throw Exception('Failed to load wallpapers');
@@ -81,11 +80,12 @@ class _HomeScreenState extends State<HomeScreen> {
           if (!isLoadingMore &&
               scrollInfo.metrics.pixels >=
                   scrollInfo.metrics.maxScrollExtent - 200) {
-            fetchWallpapers(loadMore: true); // load next page
+            fetchWallpapers(loadMore: true);
           }
           return false;
         },
         child: GridView.builder(
+          padding: const EdgeInsets.all(10),
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             crossAxisSpacing: 10,

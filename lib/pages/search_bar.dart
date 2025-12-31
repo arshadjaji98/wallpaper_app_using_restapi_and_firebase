@@ -61,8 +61,9 @@ class _SearchState extends State<Search> {
             ),
             const SizedBox(height: 5),
             Container(
+              height: 50,
               padding: const EdgeInsets.symmetric(horizontal: 10),
-              margin: const EdgeInsets.symmetric(horizontal: 20),
+              margin: const EdgeInsets.all(10),
               width: MediaQuery.of(context).size.width,
               decoration: BoxDecoration(
                 color: const Color.fromARGB(255, 213, 213, 218),
@@ -70,13 +71,27 @@ class _SearchState extends State<Search> {
               ),
               child: TextField(
                 controller: searchController,
+                textAlignVertical: TextAlignVertical.center,
+                textInputAction: TextInputAction.search,
+                onSubmitted: (value) {
+                  final query = value.trim();
+                  if (query.isNotEmpty) {
+                    FocusScope.of(context).unfocus(); // close keyboard properly
+                    getSearchWallpaper(query);
+                  }
+                },
                 decoration: InputDecoration(
+                  hintText: 'Search wallpapers',
                   border: InputBorder.none,
                   suffixIcon: IconButton(
+                    icon: const Icon(Icons.search),
                     onPressed: () {
-                      getSearchWallpaper(searchController.text);
+                      final query = searchController.text.trim();
+                      if (query.isNotEmpty) {
+                        FocusScope.of(context).unfocus();
+                        getSearchWallpaper(query);
+                      }
                     },
-                    icon: Icon(Icons.search),
                   ),
                 ),
               ),
