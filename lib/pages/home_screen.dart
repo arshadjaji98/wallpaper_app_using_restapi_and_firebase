@@ -1,8 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:carousel_slider/carousel_slider.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:math';
+
+import 'package:wallify/pages/full_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -13,8 +15,9 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   List<String> wallpaperImages = [];
-  int activeIndex = 0;
   String apiKey = 'xJ3GSJTJPtUTe2UZybPOJ011SYze6s7r6w2PpM5CYGbWDHPGiwz3PTAs';
+  int page = 1;
+  bool isLoadingMore = false;
 
   @override
   void initState() {
@@ -22,10 +25,14 @@ class _HomeScreenState extends State<HomeScreen> {
     fetchWallpapers();
   }
 
-  Future<void> fetchWallpapers() async {
+  Future<void> fetchWallpapers({bool loadMore = false}) async {
+    if (loadMore) {
+      setState(() => isLoadingMore = true);
+    }
+
     final response = await http.get(
       Uri.parse(
-        'https://api.pexels.com/v1/search?query=wallpapers&per_page=100',
+        'https://api.pexels.com/v1/search?query=wallpapers&per_page=20&page=$page',
       ),
       headers: {'Authorization': apiKey},
     );
@@ -33,10 +40,21 @@ class _HomeScreenState extends State<HomeScreen> {
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       final List photos = data['photos'];
+
+      List<String> images = photos
+          .map<String>((photo) => photo['src']['portrait'] as String)
+          .toList();
+
+      images.shuffle(); // optional randomness
+
       setState(() {
-        wallpaperImages = photos
-            .map<String>((photo) => photo['src']['portrait'] as String)
-            .toList();
+        if (loadMore) {
+          wallpaperImages.addAll(images); // append new images
+          isLoadingMore = false;
+        } else {
+          wallpaperImages = images;
+        }
+        page++; // next page
       });
     } else {
       throw Exception('Failed to load wallpapers');
@@ -46,89 +64,59 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: wallpaperImages.isEmpty
-          ? const Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-              child: Container(
-                margin: const EdgeInsets.only(top: 60, left: 20, right: 20),
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        Material(
-                          elevation: 5,
-                          borderRadius: BorderRadius.circular(60),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(80),
-                            child: const CircleAvatar(
-                              radius: 30,
-                              backgroundImage: AssetImage("assets/boy.jpg"),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 80),
-                        const Text(
-                          "Walify",
-                          style: TextStyle(
-                            fontSize: 28,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Poppins',
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 30),
-                    CarouselSlider.builder(
-                      itemCount: wallpaperImages.length,
-                      itemBuilder: (context, index, realindex) {
-                        final res = wallpaperImages[index];
-                        return buildImage(res, index);
-                      },
-                      options: CarouselOptions(
-                        autoPlay: true,
-                        height: MediaQuery.of(context).size.height / 1.5,
-                        viewportFraction: 1,
-                        enlargeCenterPage: true,
-                        enlargeStrategy: CenterPageEnlargeStrategy.height,
-                        onPageChanged: (index, reason) {
-                          setState(() {
-                            activeIndex = index;
-                          });
-                        },
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    Center(child: buildIndicator()),
-                  ],
+      appBar: AppBar(
+        backgroundColor: Color.fromARGB(255, 84, 87, 93),
+        title: const Text(
+          'Wallify',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Poppins',
+          ),
+        ),
+        centerTitle: true,
+      ),
+      body: NotificationListener<ScrollNotification>(
+        onNotification: (ScrollNotification scrollInfo) {
+          if (!isLoadingMore &&
+              scrollInfo.metrics.pixels >=
+                  scrollInfo.metrics.maxScrollExtent - 200) {
+            fetchWallpapers(loadMore: true); // load next page
+          }
+          return false;
+        },
+        child: GridView.builder(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 10,
+            mainAxisSpacing: 10,
+            childAspectRatio: 0.7,
+          ),
+          itemCount: wallpaperImages.length,
+          itemBuilder: (context, index) {
+            final url = wallpaperImages[index];
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => FullScreen(imagepath: url),
+                  ),
+                );
+              },
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: CachedNetworkImage(
+                  imageUrl: url,
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) =>
+                      Container(color: Colors.grey[300]),
+                  errorWidget: (context, url, error) => const Icon(Icons.error),
                 ),
               ),
-            ),
-    );
-  }
-
-  Widget buildIndicator() => AnimatedSmoothIndicator(
-    activeIndex: activeIndex,
-    count: wallpaperImages.length,
-    effect: const ExpandingDotsEffect(
-      activeDotColor: Color.fromARGB(255, 84, 87, 93),
-      dotWidth: 10,
-      dotHeight: 10,
-    ),
-  );
-
-  Widget buildImage(String urlImage, int index) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    double imageHeight = screenWidth > 600
-        ? MediaQuery.of(context).size.height / 2
-        : MediaQuery.of(context).size.height / 1.5;
-
-    return Container(
-      margin: const EdgeInsets.only(right: 10),
-      height: imageHeight,
-      width: MediaQuery.of(context).size.width,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(8),
-        child: Image.network(urlImage, fit: BoxFit.cover),
+            );
+          },
+        ),
       ),
     );
   }
