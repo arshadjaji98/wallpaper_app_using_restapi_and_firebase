@@ -8,53 +8,176 @@ class WallpaperCategories extends StatefulWidget {
 }
 
 class _WallpaperCategoriesState extends State<WallpaperCategories> {
-  final List<String> categories = [
-    'Nature',
-    'Cars',
-    'Anime',
-    'Abstract',
-    'Minimal',
-    'Dark',
-    'Technology',
-    'Space',
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Wallpaper Categories')),
-      body: SizedBox(
-        height: 45,
-        child: ListView.separated(
-          scrollDirection: Axis.horizontal,
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          itemCount: categories.length,
-          separatorBuilder: (_, __) => const SizedBox(width: 8),
-          itemBuilder: (context, index) {
-            return GestureDetector(
-              onTap: () {
-                // Handle category tap
-              },
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 84, 87, 93),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                alignment: Alignment.center,
-                child: Text(
-                  categories[index],
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontFamily: 'Poppins',
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-            );
-          },
+      appBar: AppBar(
+        centerTitle: true,
+        backgroundColor: Color.fromARGB(255, 84, 87, 93),
+        title: const Text(
+          'Wallpaper Categories',
+          style: TextStyle(color: Colors.white),
         ),
+      ),
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          GestureDetector(
+            onTap: () {},
+            child: _buildCategoryContainer(
+              context,
+              "assets/animals.jpg",
+              "WildLife",
+              0,
+              210,
+            ),
+          ),
+          const SizedBox(height: 20),
+          GestureDetector(
+            onTap: () {},
+            child: _buildCategoryContainer(
+              context,
+              "assets/foods.jpg",
+              "Food",
+              0,
+              210,
+            ),
+          ),
+          const SizedBox(height: 20),
+          GestureDetector(
+            onTap: () {},
+            child: _buildCategoryContainer(
+              context,
+              "assets/nature.jpg",
+              "Nature",
+              0,
+              210,
+            ),
+          ),
+          const SizedBox(height: 20),
+          GestureDetector(
+            onTap: () {},
+            child: _buildCategoryContainer(
+              context,
+              "assets/cars.jpg",
+              "Cars",
+              0,
+              210,
+            ),
+          ),
+          const SizedBox(height: 20),
+          GestureDetector(
+            onTap: () {},
+            child: _buildCategoryContainer(
+              context,
+              "assets/technology.jpg",
+              "Technology",
+              0,
+              210,
+            ),
+          ),
+          const SizedBox(height: 20),
+          GestureDetector(
+            onTap: () {},
+            child: _buildCategoryContainer(
+              context,
+              "assets/sad.jpg",
+              "Sad",
+              0,
+              210,
+            ),
+          ),
+          const SizedBox(height: 20),
+          GestureDetector(
+            onTap: () {},
+            child: _buildCategoryContainer(
+              context,
+              "assets/happy.jpg",
+              "Happy",
+              0,
+              210,
+            ),
+          ),
+          const SizedBox(height: 20),
+          GestureDetector(
+            onTap: () {},
+            child: _buildCategoryContainer(
+              context,
+              "assets/dark.jpg",
+              "Dark",
+              0,
+              210,
+            ),
+          ),
+          const SizedBox(height: 20),
+          GestureDetector(
+            onTap: () {},
+            child: _buildCategoryContainer(
+              context,
+              "assets/city.jpg",
+              "City",
+              0,
+              210,
+            ),
+          ),
+        ],
       ),
     );
   }
+}
+
+Widget _buildCategoryContainer(
+  BuildContext context,
+  String imagePath,
+  String label,
+  double topPosition,
+  double textBackgroundHeight,
+) {
+  final double containerHeight = 200;
+  final double borderRadius = 20;
+  return Container(
+    margin: const EdgeInsets.symmetric(horizontal: 20),
+    width: MediaQuery.of(context).size.width,
+    height: containerHeight,
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(borderRadius),
+      boxShadow: const [
+        BoxShadow(color: Colors.black26, blurRadius: 8, offset: Offset(2, 2)),
+      ],
+    ),
+    child: ClipRRect(
+      borderRadius: BorderRadius.circular(borderRadius),
+      child: Stack(
+        children: [
+          Image.asset(
+            imagePath,
+            width: MediaQuery.of(context).size.width,
+            height: containerHeight,
+            fit: BoxFit.cover,
+          ),
+          Positioned(
+            top: topPosition,
+            left: 0,
+            right: 0,
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              height: textBackgroundHeight,
+              color: Colors.black26,
+              child: Center(
+                child: Text(
+                  label,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 30,
+                    fontFamily: 'Poppins',
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
 }
