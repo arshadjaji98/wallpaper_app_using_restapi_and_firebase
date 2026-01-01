@@ -4,6 +4,7 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:wallify/pages/catogries.dart';
 import 'package:wallify/pages/home_screen.dart';
 import 'package:wallify/pages/search_bar.dart';
+import 'package:wallify/pages/wallpaper_categories.dart';
 
 class BottomNavBar extends StatefulWidget {
   const BottomNavBar({super.key});
@@ -17,7 +18,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
 
   late List<Widget> pages;
   late HomeScreen home;
-  late Categories catogries;
+  late WallpaperCategories catogries;
   late Search search;
   late Widget currentPage;
 
@@ -25,7 +26,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
   void initState() {
     home = const HomeScreen();
     search = const Search();
-    catogries = const Categories();
+    catogries = const WallpaperCategories();
     currentPage = const HomeScreen();
     pages = [home, search, catogries];
     super.initState();
