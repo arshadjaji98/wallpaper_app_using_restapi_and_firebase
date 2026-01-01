@@ -1,7 +1,5 @@
-import 'package:flutter/material.dart';
-// ignore: depend_on_referenced_packages
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'package:wallify/pages/catogries.dart';
+import 'package:flutter/material.dart';
 import 'package:wallify/pages/home_screen.dart';
 import 'package:wallify/pages/search_bar.dart';
 import 'package:wallify/pages/wallpaper_categories.dart';
