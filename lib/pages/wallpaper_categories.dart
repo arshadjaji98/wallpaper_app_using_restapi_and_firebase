@@ -14,13 +14,13 @@ class _WallpaperCategoriesState extends State<WallpaperCategories> {
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: Color.fromARGB(255, 84, 87, 93),
-        title: const Text(
+        title: Text(
           'Wallpaper Categories',
           style: TextStyle(color: Colors.white),
         ),
       ),
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.symmetric(vertical: 10),
         children: [
           GestureDetector(
             onTap: () {},
