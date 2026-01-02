@@ -15,91 +15,129 @@ class Search extends StatefulWidget {
 class _SearchState extends State<Search> {
   List<PhotosModel> photos = [];
   TextEditingController searchController = TextEditingController();
-  getSearchWallpaper(String searchQuery) async {
-    final response = await http.get(
-      Uri.parse(
-        "https://api.pexels.com/v1/search?query=$searchQuery&per_page=30",
-      ),
-      headers: {
-        "Authorization":
-            "xJ3GSJTJPtUTe2UZybPOJ011SYze6s7r6w2PpM5CYGbWDHPGiwz3PTAs",
-      },
-    );
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> jsonData = jsonDecode(response.body);
-      final List<PhotosModel> fetchedPhotos = [];
-      jsonData["photos"].forEach((element) {
-        PhotosModel photosModel = PhotosModel.fromMap(element);
-        fetchedPhotos.add(photosModel);
-      });
-      setState(() {
-        photos = fetchedPhotos;
-      });
-    } else {
-      if (kDebugMode) {
-        print('Failed to load wallpapers: ${response.statusCode}');
+  bool isLoading = false;
+  bool hasSearched = false; // track if user searched
+
+  Future<void> getSearchWallpaper(String searchQuery) async {
+    setState(() {
+      isLoading = true;
+      hasSearched = true;
+    });
+
+    try {
+      final response = await http.get(
+        Uri.parse(
+          "https://api.pexels.com/v1/search?query=$searchQuery&per_page=30",
+        ),
+        headers: {
+          "Authorization":
+              "xJ3GSJTJPtUTe2UZybPOJ011SYze6s7r6w2PpM5CYGbWDHPGiwz3PTAs",
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> jsonData = jsonDecode(response.body);
+        final List<PhotosModel> fetchedPhotos = [];
+        for (var element in jsonData["photos"]) {
+          fetchedPhotos.add(PhotosModel.fromMap(element));
+        }
+        setState(() {
+          photos = fetchedPhotos;
+        });
+      } else {
+        if (kDebugMode) {
+          print('Failed to load wallpapers: ${response.statusCode}');
+        }
       }
+    } catch (e) {
+      if (kDebugMode) print("Error fetching wallpapers: $e");
+    } finally {
+      setState(() => isLoading = false);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        margin: const EdgeInsets.only(top: 30),
-        child: Column(
-          children: [
-            const Center(
-              child: Text(
-                "Search",
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Poppins',
-                ),
-              ),
-            ),
-            const SizedBox(height: 5),
-            Container(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        centerTitle: true,
+        title: const Text(
+          'Search Wallpapers',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Poppins',
+          ),
+        ),
+      ),
+      body: Column(
+        children: [
+          // Search bar on screen
+          Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Container(
               height: 50,
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              margin: const EdgeInsets.all(10),
-              width: MediaQuery.of(context).size.width,
+              padding: const EdgeInsets.symmetric(horizontal: 15),
               decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 213, 213, 218),
-                borderRadius: BorderRadius.circular(8),
+                color: const Color(0xFFF0F0F0),
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Colors.black12,
+                    blurRadius: 4,
+                    offset: Offset(2, 2),
+                  ),
+                ],
               ),
-              child: TextField(
-                controller: searchController,
-                textAlignVertical: TextAlignVertical.center,
-                textInputAction: TextInputAction.search,
-                onSubmitted: (value) {
-                  final query = value.trim();
-                  if (query.isNotEmpty) {
-                    FocusScope.of(context).unfocus(); // close keyboard properly
-                    getSearchWallpaper(query);
-                  }
-                },
-                decoration: InputDecoration(
-                  hintText: 'Search wallpapers',
-                  border: InputBorder.none,
-                  suffixIcon: IconButton(
-                    icon: const Icon(Icons.search),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: searchController,
+                      textInputAction: TextInputAction.search,
+                      onSubmitted: (value) {
+                        final query = value.trim();
+                        if (query.isNotEmpty) getSearchWallpaper(query);
+                      },
+                      decoration: const InputDecoration(
+                        hintText: "Search wallpapers...",
+                        border: InputBorder.none,
+                        hintStyle: TextStyle(color: Colors.black54),
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.search, color: Colors.black87),
                     onPressed: () {
                       final query = searchController.text.trim();
-                      if (query.isNotEmpty) {
-                        FocusScope.of(context).unfocus();
-                        getSearchWallpaper(query);
-                      }
+                      if (query.isNotEmpty) getSearchWallpaper(query);
                     },
                   ),
-                ),
+                ],
               ),
             ),
-            const SizedBox(height: 20),
-            Expanded(child: wallpaper(photos, context)),
-          ],
-        ),
+          ),
+          // Loading indicator
+          if (isLoading)
+            const LinearProgressIndicator(
+              color: Color.fromARGB(255, 84, 87, 93),
+              backgroundColor: Colors.grey,
+            ),
+          // No wallpapers found
+          if (!isLoading && photos.isEmpty && hasSearched)
+            const Padding(
+              padding: EdgeInsets.all(20.0),
+              child: Text(
+                "No wallpapers found. Try a different keyword.",
+                style: TextStyle(fontSize: 16, color: Colors.black54),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          // Wallpapers grid
+          Expanded(child: wallpaper(photos, context)),
+        ],
       ),
     );
   }

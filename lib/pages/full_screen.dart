@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:io';
 import 'package:flutter/material.dart';
 // ignore: depend_on_referenced_packages
@@ -5,6 +7,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:wallify/widgets/flush_bar.dart';
 import 'package:wallpaper_manager_flutter/wallpaper_manager_flutter.dart';
 
 // ignore: must_be_immutable
@@ -146,13 +149,19 @@ class _FullScreenState extends State<FullScreen> {
       final file = File('$folderPath/$fileName');
       await file.writeAsBytes(bytes);
 
-      ScaffoldMessenger.of(
+      showMessage(
         context,
-      ).showSnackBar(const SnackBar(content: Text('Image saved in gallery!')));
+        title: "Success",
+        message: "Image saved to gallery!",
+        backgroundColor: Colors.white70,
+      );
     } catch (e) {
-      ScaffoldMessenger.of(
+      showMessage(
         context,
-      ).showSnackBar(SnackBar(content: Text('Failed to save image: $e')));
+        title: "Error",
+        message: 'Failed to save image, Check your Internet Connection:',
+        backgroundColor: Colors.redAccent,
+      );
     } finally {
       setState(() => _isSavingGallery = false);
     }
@@ -163,9 +172,12 @@ class _FullScreenState extends State<FullScreen> {
 
     try {
       if (!await _requestPermission(Permission.storage)) {
-        ScaffoldMessenger.of(
+        showMessage(
           context,
-        ).showSnackBar(const SnackBar(content: Text("Permission denied")));
+          title: "Error",
+          message: "Permission denied",
+          backgroundColor: Colors.redAccent,
+        );
         setState(() => _isSettingLock = false);
         return;
       }
@@ -184,13 +196,20 @@ class _FullScreenState extends State<FullScreen> {
         WallpaperManagerFlutter.lockScreen,
       );
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Lock screen wallpaper set!')),
+      showMessage(
+        context,
+        title: "Success",
+        message: "Lock screen wallpaper set!",
+        backgroundColor: Colors.white70,
       );
     } catch (e) {
-      ScaffoldMessenger.of(
+      showMessage(
         context,
-      ).showSnackBar(SnackBar(content: Text('Failed to set wallpaper: $e')));
+        title: "Error",
+        message:
+            'Failed to set lock screen wallpaper, Check your Internet Connection:',
+        backgroundColor: Colors.redAccent,
+      );
     } finally {
       setState(() => _isSettingLock = false);
     }

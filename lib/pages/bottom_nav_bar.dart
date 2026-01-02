@@ -14,43 +14,45 @@ class BottomNavBar extends StatefulWidget {
 class _BottomNavBarState extends State<BottomNavBar> {
   int currentTabIndex = 0;
 
-  late List<Widget> pages;
-  late HomeScreen home;
-  late WallpaperCategories catogries;
-  late Search search;
-  late Widget currentPage;
-
-  @override
-  void initState() {
-    home = const HomeScreen();
-    search = const Search();
-    catogries = const WallpaperCategories();
-    currentPage = const HomeScreen();
-    pages = [home, search, catogries];
-    super.initState();
-  }
+  final List<Widget> pages = const [
+    HomeScreen(),
+    Search(),
+    WallpaperCategories(),
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      body: pages[currentTabIndex],
       bottomNavigationBar: CurvedNavigationBar(
-        buttonBackgroundColor: Colors.black,
-        backgroundColor: Colors.white,
-        height: 65,
-        color: const Color.fromARGB(255, 84, 87, 93),
-        animationDuration: const Duration(microseconds: 500),
-        onTap: (int index) {
+        index: currentTabIndex,
+        height: 60,
+        backgroundColor: Colors.transparent,
+        color: const Color(0xFF1C1C1E),
+        buttonBackgroundColor: const Color(0xFF1C1C1E),
+        items: [
+          Icon(
+            Icons.home,
+            size: 28,
+            color: currentTabIndex == 0 ? Colors.white : Colors.grey[400],
+          ),
+          Icon(
+            Icons.search_outlined,
+            size: 28,
+            color: currentTabIndex == 1 ? Colors.white : Colors.grey[400],
+          ),
+          Icon(
+            Icons.category,
+            size: 28,
+            color: currentTabIndex == 2 ? Colors.white : Colors.grey[400],
+          ),
+        ],
+        onTap: (index) {
           setState(() {
             currentTabIndex = index;
           });
         },
-        items: const [
-          Icon(Icons.home, color: Colors.white),
-          Icon(Icons.search_outlined, color: Colors.white),
-          Icon(Icons.category, color: Colors.white),
-        ],
       ),
-      body: pages[currentTabIndex],
     );
   }
 }

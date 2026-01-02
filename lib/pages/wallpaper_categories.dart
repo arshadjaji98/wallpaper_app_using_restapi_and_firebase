@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wallify/pages/categoroy_wallpaper.dart';
 
 class WallpaperCategories extends StatefulWidget {
   const WallpaperCategories({super.key});
@@ -13,17 +14,28 @@ class _WallpaperCategoriesState extends State<WallpaperCategories> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: Color.fromARGB(255, 84, 87, 93),
         title: Text(
-          'Wallpaper Categories',
-          style: TextStyle(color: Colors.white),
+          "Categories",
+          style: TextStyle(
+            fontSize: 28,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Poppins',
+          ),
         ),
       ),
       body: ListView(
         padding: EdgeInsets.symmetric(vertical: 10),
         children: [
           GestureDetector(
-            onTap: () {},
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) =>
+                      const CategoryWallpapers(category: 'Wildlife'),
+                ),
+              );
+            },
             child: _buildCategoryContainer(
               context,
               "assets/animals.jpg",
@@ -34,7 +46,14 @@ class _WallpaperCategoriesState extends State<WallpaperCategories> {
           ),
           const SizedBox(height: 20),
           GestureDetector(
-            onTap: () {},
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const CategoryWallpapers(category: 'Food'),
+                ),
+              );
+            },
             child: _buildCategoryContainer(
               context,
               "assets/foods.jpg",
@@ -45,7 +64,14 @@ class _WallpaperCategoriesState extends State<WallpaperCategories> {
           ),
           const SizedBox(height: 20),
           GestureDetector(
-            onTap: () {},
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const CategoryWallpapers(category: 'Nature'),
+                ),
+              );
+            },
             child: _buildCategoryContainer(
               context,
               "assets/nature.jpg",
@@ -56,7 +82,14 @@ class _WallpaperCategoriesState extends State<WallpaperCategories> {
           ),
           const SizedBox(height: 20),
           GestureDetector(
-            onTap: () {},
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const CategoryWallpapers(category: 'Cars'),
+                ),
+              );
+            },
             child: _buildCategoryContainer(
               context,
               "assets/cars.jpg",
@@ -67,7 +100,15 @@ class _WallpaperCategoriesState extends State<WallpaperCategories> {
           ),
           const SizedBox(height: 20),
           GestureDetector(
-            onTap: () {},
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) =>
+                      const CategoryWallpapers(category: 'Technology'),
+                ),
+              );
+            },
             child: _buildCategoryContainer(
               context,
               "assets/technology.jpg",
@@ -78,7 +119,14 @@ class _WallpaperCategoriesState extends State<WallpaperCategories> {
           ),
           const SizedBox(height: 20),
           GestureDetector(
-            onTap: () {},
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const CategoryWallpapers(category: 'Sad'),
+                ),
+              );
+            },
             child: _buildCategoryContainer(
               context,
               "assets/sad.jpg",
@@ -89,7 +137,14 @@ class _WallpaperCategoriesState extends State<WallpaperCategories> {
           ),
           const SizedBox(height: 20),
           GestureDetector(
-            onTap: () {},
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const CategoryWallpapers(category: 'Happy'),
+                ),
+              );
+            },
             child: _buildCategoryContainer(
               context,
               "assets/happy.jpg",
@@ -100,7 +155,14 @@ class _WallpaperCategoriesState extends State<WallpaperCategories> {
           ),
           const SizedBox(height: 20),
           GestureDetector(
-            onTap: () {},
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const CategoryWallpapers(category: 'Dark'),
+                ),
+              );
+            },
             child: _buildCategoryContainer(
               context,
               "assets/dark.jpg",
@@ -111,7 +173,14 @@ class _WallpaperCategoriesState extends State<WallpaperCategories> {
           ),
           const SizedBox(height: 20),
           GestureDetector(
-            onTap: () {},
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const CategoryWallpapers(category: 'City'),
+                ),
+              );
+            },
             child: _buildCategoryContainer(
               context,
               "assets/city.jpg",
