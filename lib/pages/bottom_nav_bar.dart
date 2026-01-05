@@ -14,7 +14,12 @@ class BottomNavBar extends StatefulWidget {
 class _BottomNavBarState extends State<BottomNavBar> {
   int currentTabIndex = 0;
 
-  final List<Widget> pages = [HomeScreen(), Search(), WallpaperCategories()];
+  final List<Widget> pages = [
+    HomeScreen(),
+    Search(),
+    WallpaperCategories(),
+    // ProfileScreen(),
+  ];
 
   @override
   Widget build(BuildContext context) {
