@@ -16,9 +16,14 @@ class _SearchState extends State<Search> {
   List<PhotosModel> photos = [];
   TextEditingController searchController = TextEditingController();
   bool isLoading = false;
-  bool hasSearched = false; // track if user searched
+  bool hasSearched = false;
+  final ScrollController _scrollController = ScrollController();
 
   Future<void> getSearchWallpaper(String searchQuery) async {
+    if (_scrollController.hasClients) {
+      _scrollController.jumpTo(0);
+    }
+
     setState(() {
       isLoading = true;
       hasSearched = true;
@@ -38,19 +43,19 @@ class _SearchState extends State<Search> {
       if (response.statusCode == 200) {
         final Map<String, dynamic> jsonData = jsonDecode(response.body);
         final List<PhotosModel> fetchedPhotos = [];
+
         for (var element in jsonData["photos"]) {
           fetchedPhotos.add(PhotosModel.fromMap(element));
         }
+
         setState(() {
           photos = fetchedPhotos;
         });
-      } else {
-        if (kDebugMode) {
-          print('Failed to load wallpapers: ${response.statusCode}');
-        }
       }
     } catch (e) {
-      if (kDebugMode) print("Error fetching wallpapers: $e");
+      if (kDebugMode) {
+        print("Error fetching wallpapers: $e");
+      }
     } finally {
       setState(() => isLoading = false);
     }
@@ -74,7 +79,6 @@ class _SearchState extends State<Search> {
       ),
       body: Column(
         children: [
-          // Search bar on screen
           Padding(
             padding: const EdgeInsets.all(15.0),
             child: Container(
@@ -119,13 +123,11 @@ class _SearchState extends State<Search> {
               ),
             ),
           ),
-          // Loading indicator
           if (isLoading)
             const LinearProgressIndicator(
               color: Color.fromARGB(255, 84, 87, 93),
               backgroundColor: Colors.grey,
             ),
-          // No wallpapers found
           if (!isLoading && photos.isEmpty && hasSearched)
             const Padding(
               padding: EdgeInsets.all(20.0),
@@ -135,8 +137,9 @@ class _SearchState extends State<Search> {
                 textAlign: TextAlign.center,
               ),
             ),
-          // Wallpapers grid
-          Expanded(child: wallpaper(photos, context)),
+          Expanded(
+            child: wallpaper(photos, context, controller: _scrollController),
+          ),
         ],
       ),
     );

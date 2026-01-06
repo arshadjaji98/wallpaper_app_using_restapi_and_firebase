@@ -3,7 +3,11 @@ import 'package:wallify/model/photos_model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:wallify/pages/full_screen.dart';
 
-Widget wallpaper(List<PhotosModel> listPhotos, BuildContext context) {
+Widget wallpaper(
+  List<PhotosModel> listPhotos,
+  BuildContext context, {
+  required ScrollController controller,
+}) {
   return Container(
     padding: EdgeInsets.symmetric(horizontal: 10),
     child: GridView.count(
