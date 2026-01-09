@@ -80,7 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: const Text(
-          'Wallify',
+          'Wallpapers',
           style: TextStyle(
             fontSize: 28,
             fontWeight: FontWeight.bold,
