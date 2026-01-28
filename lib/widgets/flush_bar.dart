@@ -18,7 +18,7 @@ void showMessage(
     boxShadows: const [
       BoxShadow(color: Colors.black26, blurRadius: 8, offset: Offset(2, 2)),
     ],
-    duration: const Duration(seconds: 3),
+    duration: const Duration(seconds: 5),
     icon: Icon(iconData, color: iconColor, size: 28),
     titleText: Text(
       title,

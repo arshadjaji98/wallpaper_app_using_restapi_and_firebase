@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'dart:math';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cached_network_image/cached_network_image.dart'
+    show CachedNetworkImage;
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:wallify/pages/full_screen.dart';
+import 'package:wallify/widgets/flush_bar.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -61,8 +63,14 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error fetching wallpapers: $e')),
+        showMessage(
+          context,
+          title: 'Error',
+          message:
+              'Could not fetch wallpapers. Check your internet connection.',
+          backgroundColor: Colors.white,
+          iconData: Icons.error,
+          iconColor: Colors.black,
         );
       }
     } finally {
