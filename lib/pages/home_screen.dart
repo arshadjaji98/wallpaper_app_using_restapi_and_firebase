@@ -8,7 +8,7 @@ import 'package:wallify/pages/full_screen.dart';
 import 'package:wallify/widgets/flush_bar.dart';
 
 class HomeScreen extends StatefulWidget {
-  HomeScreen({super.key});
+  const HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();

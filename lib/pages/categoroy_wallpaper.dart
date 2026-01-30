@@ -87,7 +87,7 @@ class _CategoryWallpapersState extends State<CategoryWallpapers> {
         centerTitle: true,
       ),
       body: isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? Center(child: CircularProgressIndicator())
           : NotificationListener<ScrollNotification>(
               onNotification: (scroll) {
                 if (scroll.metrics.pixels >=
