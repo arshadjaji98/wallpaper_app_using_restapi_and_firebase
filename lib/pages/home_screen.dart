@@ -8,7 +8,7 @@ import 'package:wallify/pages/full_screen.dart';
 import 'package:wallify/widgets/flush_bar.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -87,7 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: const Text(
+        title: Text(
           'Wallpapers',
           style: TextStyle(
             fontSize: 28,
@@ -107,7 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
           return false;
         },
         child: isLoading && wallpaperImages.isEmpty
-            ? const Center(child: CircularProgressIndicator())
+            ? Center(child: CircularProgressIndicator())
             : RefreshIndicator(
                 onRefresh: () async {
                   page = 1;
@@ -115,8 +115,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   await fetchWallpapers();
                 },
                 child: GridView.builder(
-                  padding: const EdgeInsets.all(10),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  padding: EdgeInsets.all(10),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
                     crossAxisSpacing: 10,
                     mainAxisSpacing: 10,
@@ -125,7 +125,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   itemCount: wallpaperImages.length + (isLoadingMore ? 1 : 0),
                   itemBuilder: (context, index) {
                     if (index == wallpaperImages.length) {
-                      return const Center(child: CircularProgressIndicator());
+                      return Center(child: CircularProgressIndicator());
                     }
                     final url = wallpaperImages[index];
                     return GestureDetector(
@@ -145,7 +145,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           placeholder: (context, url) =>
                               Container(color: Colors.grey[300]),
                           errorWidget: (context, url, error) =>
-                              const Icon(Icons.error),
+                              Icon(Icons.error),
                         ),
                       ),
                     );

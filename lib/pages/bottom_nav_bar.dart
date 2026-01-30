@@ -24,7 +24,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
         index: currentTabIndex,
         height: 60,
         backgroundColor: Colors.transparent,
-        color: const Color(0xFF1C1C1E),
+        color: Color(0xFF1C1C1E),
         buttonBackgroundColor: const Color(0xFF1C1C1E),
         items: [
           Icon(
