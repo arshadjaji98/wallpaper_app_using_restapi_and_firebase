@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart'
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:wallify/pages/full_screen.dart';
+import 'package:wallify/services/env_services.dart';
 import 'package:wallify/widgets/flush_bar.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -16,7 +17,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   List<String> wallpaperImages = [];
-  String apiKey = 'xJ3GSJTJPtUTe2UZybPOJ011SYze6s7r6w2PpM5CYGbWDHPGiwz3PTAs';
+  String apiKey = EnvSetupService.pexelsApiKey;
   int page = 1;
   bool isLoadingMore = false;
   bool isLoading = true;
@@ -32,7 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (!loadMore) setState(() => isLoading = true);
 
     try {
-      int randomPage = Random().nextInt(50) + 1; // random page between 1 and 50
+      int randomPage = Random().nextInt(50) + 1;
       final response = await http.get(
         Uri.parse(
           'https://api.pexels.com/v1/search?query=wallpapers&per_page=20&page=$randomPage',

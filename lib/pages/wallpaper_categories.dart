@@ -8,13 +8,44 @@ class WallpaperCategories extends StatefulWidget {
   State<WallpaperCategories> createState() => _WallpaperCategoriesState();
 }
 
-class _WallpaperCategoriesState extends State<WallpaperCategories> {
+class _WallpaperCategoriesState extends State<WallpaperCategories>
+    with AutomaticKeepAliveClientMixin {
+  final List<Map<String, String>> categories = [
+    {"label": "WildLife", "image": "assets/animals.jpg"},
+    {"label": "Food", "image": "assets/foods.jpg"},
+    {"label": "Nature", "image": "assets/nature.jpg"},
+    {"label": "Cars", "image": "assets/cars.jpg"},
+    {"label": "Technology", "image": "assets/technology.jpg"},
+    {"label": "Sad", "image": "assets/sad.jpg"},
+    {"label": "Happy", "image": "assets/happy.jpg"},
+    {"label": "Dark", "image": "assets/dark.jpg"},
+    {"label": "City", "image": "assets/city.jpg"},
+    {"label": "Space", "image": "assets/space.jpg"},
+    {"label": "Minimal", "image": "assets/minimal.jpg"},
+    {"label": "Sports", "image": "assets/sports.jpg"},
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    // Preload all images
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      for (var cat in categories) {
+        precacheImage(AssetImage(cat['image']!), context);
+      }
+    });
+  }
+
+  @override
+  bool get wantKeepAlive => true; // Keeps the screen alive
+
   @override
   Widget build(BuildContext context) {
+    super.build(context); // Required for AutomaticKeepAliveClientMixin
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text(
+        title: const Text(
           "Categories",
           style: TextStyle(
             fontSize: 28,
@@ -23,173 +54,30 @@ class _WallpaperCategoriesState extends State<WallpaperCategories> {
           ),
         ),
       ),
-      body: ListView(
-        padding: EdgeInsets.symmetric(vertical: 10),
-        children: [
-          GestureDetector(
+      body: ListView.separated(
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        itemCount: categories.length,
+        separatorBuilder: (_, __) => const SizedBox(height: 20),
+        itemBuilder: (context, index) {
+          final cat = categories[index];
+          return GestureDetector(
             onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (_) =>
-                      const CategoryWallpapers(category: 'Wildlife'),
+                  builder: (_) => CategoryWallpapers(category: cat['label']!),
                 ),
               );
             },
             child: _buildCategoryContainer(
               context,
-              "assets/animals.jpg",
-              "WildLife",
+              cat['image']!,
+              cat['label']!,
               0,
               210,
             ),
-          ),
-          const SizedBox(height: 20),
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => const CategoryWallpapers(category: 'Food'),
-                ),
-              );
-            },
-            child: _buildCategoryContainer(
-              context,
-              "assets/foods.jpg",
-              "Food",
-              0,
-              210,
-            ),
-          ),
-          const SizedBox(height: 20),
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => const CategoryWallpapers(category: 'Nature'),
-                ),
-              );
-            },
-            child: _buildCategoryContainer(
-              context,
-              "assets/nature.jpg",
-              "Nature",
-              0,
-              210,
-            ),
-          ),
-          const SizedBox(height: 20),
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => const CategoryWallpapers(category: 'Cars'),
-                ),
-              );
-            },
-            child: _buildCategoryContainer(
-              context,
-              "assets/cars.jpg",
-              "Cars",
-              0,
-              210,
-            ),
-          ),
-          const SizedBox(height: 20),
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) =>
-                      const CategoryWallpapers(category: 'Technology'),
-                ),
-              );
-            },
-            child: _buildCategoryContainer(
-              context,
-              "assets/technology.jpg",
-              "Technology",
-              0,
-              210,
-            ),
-          ),
-          const SizedBox(height: 20),
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => const CategoryWallpapers(category: 'Sad'),
-                ),
-              );
-            },
-            child: _buildCategoryContainer(
-              context,
-              "assets/sad.jpg",
-              "Sad",
-              0,
-              210,
-            ),
-          ),
-          const SizedBox(height: 20),
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => const CategoryWallpapers(category: 'Happy'),
-                ),
-              );
-            },
-            child: _buildCategoryContainer(
-              context,
-              "assets/happy.jpg",
-              "Happy",
-              0,
-              210,
-            ),
-          ),
-          const SizedBox(height: 20),
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => const CategoryWallpapers(category: 'Dark'),
-                ),
-              );
-            },
-            child: _buildCategoryContainer(
-              context,
-              "assets/dark.jpg",
-              "Dark",
-              0,
-              210,
-            ),
-          ),
-          const SizedBox(height: 20),
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => const CategoryWallpapers(category: 'City'),
-                ),
-              );
-            },
-            child: _buildCategoryContainer(
-              context,
-              "assets/city.jpg",
-              "City",
-              0,
-              210,
-            ),
-          ),
-        ],
+          );
+        },
       ),
     );
   }
