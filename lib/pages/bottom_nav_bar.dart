@@ -14,17 +14,29 @@ class BottomNavBar extends StatefulWidget {
 class _BottomNavBarState extends State<BottomNavBar> {
   int currentTabIndex = 0;
 
-  final List<Widget> pages = [HomeScreen(), Search(), WallpaperCategories()];
+  final List<Widget> pages = const [
+    HomeScreen(),
+    Search(),
+    WallpaperCategories(),
+  ];
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final isWeb = width >= 800;
+
+    return isWeb ? _webLayout() : _mobileLayout();
+  }
+
+  // 📱 MOBILE LAYOUT
+  Widget _mobileLayout() {
     return Scaffold(
       body: pages[currentTabIndex],
       bottomNavigationBar: CurvedNavigationBar(
         index: currentTabIndex,
         height: 60,
         backgroundColor: Colors.transparent,
-        color: Color(0xFF1C1C1E),
+        color: const Color(0xFF1C1C1E),
         buttonBackgroundColor: const Color(0xFF1C1C1E),
         items: [
           Icon(
@@ -48,6 +60,46 @@ class _BottomNavBarState extends State<BottomNavBar> {
             currentTabIndex = index;
           });
         },
+      ),
+    );
+  }
+
+  // 🖥 WEB / DESKTOP LAYOUT
+  Widget _webLayout() {
+    return Scaffold(
+      body: Row(
+        children: [
+          NavigationRail(
+            selectedIndex: currentTabIndex,
+            onDestinationSelected: (index) {
+              setState(() {
+                currentTabIndex = index;
+              });
+            },
+            labelType: NavigationRailLabelType.all,
+            backgroundColor: const Color(0xFF1C1C1E),
+            selectedIconTheme: const IconThemeData(color: Colors.white),
+            unselectedIconTheme: IconThemeData(color: Colors.grey[400]),
+            selectedLabelTextStyle: const TextStyle(color: Colors.white),
+            unselectedLabelTextStyle: TextStyle(color: Colors.grey[400]),
+            destinations: const [
+              NavigationRailDestination(
+                icon: Icon(Icons.home),
+                label: Text('Home'),
+              ),
+              NavigationRailDestination(
+                icon: Icon(Icons.search_outlined),
+                label: Text('Search'),
+              ),
+              NavigationRailDestination(
+                icon: Icon(Icons.category),
+                label: Text('Categories'),
+              ),
+            ],
+          ),
+          const VerticalDivider(width: 1),
+          Expanded(child: pages[currentTabIndex]),
+        ],
       ),
     );
   }
