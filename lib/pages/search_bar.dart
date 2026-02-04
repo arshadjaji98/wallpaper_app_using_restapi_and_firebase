@@ -18,11 +18,10 @@ class _SearchState extends State<Search> {
   bool isLoading = false;
   bool hasSearched = false;
   final ScrollController _scrollController = ScrollController();
+  List<String> recentSearches = [];
 
   Future<void> getSearchWallpaper(String searchQuery) async {
-    if (_scrollController.hasClients) {
-      _scrollController.jumpTo(0);
-    }
+    if (_scrollController.hasClients) _scrollController.jumpTo(0);
 
     setState(() {
       isLoading = true;
@@ -50,15 +49,122 @@ class _SearchState extends State<Search> {
 
         setState(() {
           photos = fetchedPhotos;
+          if (!recentSearches.contains(searchQuery)) {
+            recentSearches.insert(0, searchQuery);
+            if (recentSearches.length > 5) recentSearches.removeLast();
+          }
         });
       }
     } catch (e) {
-      if (kDebugMode) {
-        print("Error fetching wallpapers: $e");
-      }
+      if (kDebugMode) print("Error fetching wallpapers: $e");
     } finally {
       setState(() => isLoading = false);
     }
+  }
+
+  Widget _buildSearchBar() {
+    return Padding(
+      padding: const EdgeInsets.all(15.0),
+      child: Container(
+        height: 55,
+        padding: const EdgeInsets.symmetric(horizontal: 15),
+        decoration: BoxDecoration(
+          color: Colors.grey.shade200,
+          borderRadius: BorderRadius.circular(30),
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 5,
+              offset: Offset(2, 2),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: TextField(
+                controller: searchController,
+                textInputAction: TextInputAction.search,
+                onSubmitted: (value) {
+                  final query = value.trim();
+                  if (query.isNotEmpty) getSearchWallpaper(query);
+                },
+                decoration: InputDecoration(
+                  hintText: "Search wallpapers...",
+                  border: InputBorder.none,
+                  hintStyle: TextStyle(color: Colors.grey.shade600),
+                  suffixIcon: searchController.text.isEmpty
+                      ? null
+                      : IconButton(
+                          icon: const Icon(Icons.clear, color: Colors.grey),
+                          onPressed: () {
+                            searchController.clear();
+                            setState(() {});
+                          },
+                        ),
+                ),
+                onChanged: (_) => setState(() {}),
+              ),
+            ),
+            IconButton(
+              icon: const Icon(Icons.search, color: Colors.black87),
+              onPressed: () {
+                final query = searchController.text.trim();
+                if (query.isNotEmpty) getSearchWallpaper(query);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRecentSearches() {
+    if (recentSearches.isEmpty || hasSearched) return const SizedBox.shrink();
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 15),
+      child: Wrap(
+        spacing: 8,
+        children: recentSearches
+            .map(
+              (e) => ActionChip(
+                label: Text(e),
+                onPressed: () {
+                  searchController.text = e;
+                  getSearchWallpaper(e);
+                },
+                backgroundColor: Colors.grey.shade300,
+              ),
+            )
+            .toList(),
+      ),
+    );
+  }
+
+  Widget _buildEmptyState() {
+    return Expanded(
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.wallpaper, size: 80, color: Colors.grey.shade400),
+            const SizedBox(height: 15),
+            const Text(
+              "No wallpapers found.\nTry a different keyword.",
+              style: TextStyle(fontSize: 16, color: Colors.black54),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLoadingShimmer() {
+    return const LinearProgressIndicator(
+      color: Color.fromARGB(255, 84, 87, 93),
+      backgroundColor: Colors.grey,
+    );
   }
 
   @override
@@ -68,6 +174,7 @@ class _SearchState extends State<Search> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         centerTitle: true,
+        elevation: 0,
         title: const Text(
           'Search Wallpapers',
           style: TextStyle(
@@ -79,67 +186,24 @@ class _SearchState extends State<Search> {
       ),
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: Container(
-              height: 50,
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              decoration: BoxDecoration(
-                color: const Color(0xFFF0F0F0),
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Colors.black12,
-                    blurRadius: 4,
-                    offset: Offset(2, 2),
-                  ),
-                ],
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: searchController,
-                      textInputAction: TextInputAction.search,
-                      onSubmitted: (value) {
-                        final query = value.trim();
-                        if (query.isNotEmpty) getSearchWallpaper(query);
-                      },
-                      decoration: const InputDecoration(
-                        hintText: "Search wallpapers...",
-                        border: InputBorder.none,
-                        hintStyle: TextStyle(color: Colors.black54),
-                      ),
-                    ),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.search, color: Colors.black87),
-                    onPressed: () {
-                      final query = searchController.text.trim();
-                      if (query.isNotEmpty) getSearchWallpaper(query);
-                    },
-                  ),
-                ],
+          _buildSearchBar(),
+          _buildRecentSearches(),
+          if (isLoading) _buildLoadingShimmer(),
+          if (!isLoading && photos.isEmpty && hasSearched) _buildEmptyState(),
+          if (photos.isNotEmpty)
+            Expanded(
+              child: RefreshIndicator(
+                onRefresh: () async {
+                  final query = searchController.text.trim();
+                  if (query.isNotEmpty) await getSearchWallpaper(query);
+                },
+                child: wallpaper(
+                  photos,
+                  context,
+                  controller: _scrollController,
+                ),
               ),
             ),
-          ),
-          if (isLoading)
-            const LinearProgressIndicator(
-              color: Color.fromARGB(255, 84, 87, 93),
-              backgroundColor: Colors.grey,
-            ),
-          if (!isLoading && photos.isEmpty && hasSearched)
-            const Padding(
-              padding: EdgeInsets.all(20.0),
-              child: Text(
-                "No wallpapers found. Try a different keyword.",
-                style: TextStyle(fontSize: 16, color: Colors.black54),
-                textAlign: TextAlign.center,
-              ),
-            ),
-          Expanded(
-            child: wallpaper(photos, context, controller: _scrollController),
-          ),
         ],
       ),
     );
